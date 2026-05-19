@@ -1,17 +1,17 @@
 {
-  "name": "javascript",
+  "name": "vet-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "type": "module",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
   "dependencies": {
-    "express": "^5.2.1",
-    "nodemon": "^3.1.14"
+    "dotenv": "^16.0.0",
+    "express": "^4.22.2",
+    "mongoose": "^8.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
   }
 }

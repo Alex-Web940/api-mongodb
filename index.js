@@ -1,76 +1,26 @@
-import express from "express"
-const app = express()
+import express from 'express';
+import dotenv from 'dotenv';
+import connectDB from './src/confing/db.js';
+import ownerRoutes from './src/routes/ownerRoutes.js';
+import petRoutes from './src/routes/petRoutes.js';
+import appointmentRoutes from './src/routes/appointmentRoutes.js';
+import errorHandler from './src/middlewares/errorHandler.js';
 
-app.use(express.json())
+dotenv.config();
+connectDB();
 
-let notas = []
-let id = 1
+const app = express();
 
-// CREAR
-app.post("/notas", (req, res) => {
-    const { titulo, descripcion, estado } = req.body
+app.use(express.json());
 
-    const nuevanota = {
-        id: id++,
-        titulo,
-        descripcion,
-        estado
-    }
+app.use('/api/owners', ownerRoutes);
+app.use('/api/pets', petRoutes);
+app.use('/api/appointments', appointmentRoutes);
 
-    notas.push(nuevanota)
-    res.json({ msg: "nota creada", nota: nuevanota })
-})
+app.use(errorHandler);
 
-app.get('/notas', (req, res) => {
-    res.json(notas)
-})
+const PORT = process.env.PORT || 3000;
 
-// FILTROS
-app.get('/notas/completada', (req, res) => {
-    const resultado = notas.filter(n => n.estado === "completada")
-    res.json(resultado)
-})
-
-app.get('/notas/pendiente', (req, res) => {
-    const resultado = notas.filter(n => n.estado === "pendiente")
-    res.json(resultado)
-})
-
-app.get('/notas/curso', (req, res) => {
-    const resultado = notas.filter(n => n.estado === "en curso")
-    res.json(resultado)
-})
-
-app.put("/notas/:id", (req, res) => {
-    const { id } = req.params
-    const { titulo, descripcion, estado } = req.body
-
-    const nota = notas.find(n => n.id == id)
-
-    nota.titulo = titulo || nota.titulo
-    nota.descripcion = descripcion || nota.descripcion
-    nota.estado = estado || nota.estado
-
-    res.json({ msg: "actualizado", nota })
-})
-
-
-app.put('/notas/:id/estado', (req, res) => {
-    const { id } = req.params
-    const { estado } = req.body
-
-    const nota = notas.find(n => n.id == id)
-
-    nota.estado = estado
-
-    res.json({ msg: "estado actualizado", nota })
-})
- app.delete("/notas/:id",(req,res)=>{
-    const nota = notas.find(n => n.id != id)
-
-    res.json({msg: "nota eliminada"})
- })
- 
-app.listen(4000, () => {
-    console.log("Servidor corriendo en http://localhost:4000")
-})
+app.listen(PORT, () => {
+    console.log(`Servidor en puerto ${PORT}`);
+});
